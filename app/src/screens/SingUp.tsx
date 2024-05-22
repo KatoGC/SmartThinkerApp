@@ -2,14 +2,15 @@ import React from 'react';
 import {
   View,
   Text,
-  TextInput,
   Button,
   StyleSheet,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../../App';
 import {useNavigation} from '@react-navigation/native';
+import CustomTextInput from '../components/CustomTextInput';
 
 type SingUpScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -21,27 +22,41 @@ const SingUp = () => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.goback}>Atras</Text>
+      </TouchableOpacity>
+      <Image
+        source={require('../assets/Logo-no-background.png')}
+        style={styles.logoBackground}
+      />
       <Text style={styles.title}>Registro</Text>
-      <TextInput style={styles.input} placeholder="Nombre Completo" />
-      <TextInput style={styles.input} placeholder="Correo" />
-      <TextInput
-        style={styles.input}
+      <CustomTextInput iconName="user" placeholder="Nombre Completo" />
+      <CustomTextInput iconName="envelope-o" placeholder="Correo" />
+      <CustomTextInput
+        iconName="lock"
         placeholder="Contraseña"
         secureTextEntry
       />
-      <TextInput
-        style={styles.input}
+      <CustomTextInput
+        iconName="lock"
         placeholder="Confirmar Contraseña"
         secureTextEntry
       />
       <Button title="Registrarse" onPress={() => {}} />
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.signInText}>¿Ya tienes cuenta? Inicia Sesión</Text>
+        <Text style={styles.signInText}>
+          ¿Ya tienes cuenta?{' '}
+          <Text style={styles.singInTextBold}> Inicia Sesión </Text>
+        </Text>
       </TouchableOpacity>
     </View>
   );
 };
 const styles = StyleSheet.create({
+  goback: {
+    fontSize: 16,
+    color: 'orange',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -50,21 +65,24 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
+    color: 'blue',
     fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingLeft: 8,
+    marginBottom: 30,
+    textAlign: 'left',
   },
   signInText: {
     color: 'blue',
     textAlign: 'center',
-    marginTop: 20,
+    marginTop: 50,
+  },
+  singInTextBold: {
+    fontWeight: 'bold',
+  },
+  logoBackground: {
+    width: null,
+    resizeMode: 'contain',
+    height: 40,
+    marginBottom: 30,
   },
 });
 export default SingUp;

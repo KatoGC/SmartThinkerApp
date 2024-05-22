@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: 'blue',
     borderRadius: 25,
-    padding: 2,
-    marginBottom: 8,
+    padding: 1,
+    marginBottom: 20,
   },
   icon: {
     marginRight: 15,

@@ -38,17 +38,20 @@ const Login = () => {
         <Text style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Text>
       </TouchableOpacity>
       <Button title="Ingresar" onPress={() => {}} />
+      <Text style={styles.singWith}>O ingresa con:</Text>
       <View style={styles.socialLoginContainer}>
-        <Text>O ingresa con:</Text>
         <View style={styles.iconContainer}>
           <Icon name="google" size={40} color="#EA4335" />
-          <Icon name="facebook" size={40} color="#3b5998" />
-          <Icon name="twitter" size={40} color="#1DA1F2" />
-          <Icon name="linkedin" size={40} color="#0077B5" />
+          <Icon name="facebook-square" size={40} color="#3b5998" />
+          <Icon name="twitter-square" size={40} color="#1DA1F2" />
+          <Icon name="linkedin-square" size={40} color="#0077B5" />
         </View>
       </View>
       <TouchableOpacity onPress={() => navigation.navigate('SingUp')}>
-        <Text style={styles.signUpText}>¿No tienes cuenta? Regístrate</Text>
+        <Text style={styles.signUpText}>
+          ¿No tienes cuenta?{' '}
+          <Text style={styles.signUpTextBold}>Regístrate</Text>
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -72,6 +75,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'right',
   },
+  singWith: {
+    textAlign: 'center',
+    color: 'blue',
+    marginTop: 20,
+  },
   socialLoginContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -81,7 +89,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '60%',
-    marginTop: 10,
   },
   signUpText: {
     color: 'blue',
@@ -92,6 +99,9 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     height: 40,
     marginBottom: 30,
+  },
+  signUpTextBold: {
+    fontWeight: 'bold',
   },
 });
 
