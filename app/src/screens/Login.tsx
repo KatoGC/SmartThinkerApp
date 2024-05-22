@@ -1,15 +1,16 @@
 import {
   View,
   Text,
-  TextInput,
   Button,
   StyleSheet,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../../App';
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
+import CustomTextInput from '../components/CustomTextInput';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 type LoginNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
@@ -19,14 +20,17 @@ const Login = () => {
 
   return (
     <View style={styles.container}>
-      <Icon name="user" size={50} color="#000" />
-      <Text style={styles.title}>Iniciar Sesión</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Correo o Nombre de Usuario"
+      <Image
+        source={require('../assets/Logo-no-background.png')}
+        style={styles.logoBackground}
       />
-      <TextInput
-        style={styles.input}
+      <Text style={styles.title}>Iniciar Sesión</Text>
+      <CustomTextInput
+        iconName="user"
+        placeholder="Correo o Nombre de usuario"
+      />
+      <CustomTextInput
+        iconName="lock"
         placeholder="Contraseña"
         secureTextEntry
       />
@@ -43,7 +47,7 @@ const Login = () => {
           <Icon name="linkedin" size={40} color="#0077B5" />
         </View>
       </View>
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+      <TouchableOpacity onPress={() => navigation.navigate('SingUp')}>
         <Text style={styles.signUpText}>¿No tienes cuenta? Regístrate</Text>
       </TouchableOpacity>
     </View>
@@ -57,17 +61,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingLeft: 8,
+    marginBottom: 30,
+    textAlign: 'left',
+    color: 'blue',
   },
   forgotPassword: {
     color: 'blue',
@@ -88,6 +86,12 @@ const styles = StyleSheet.create({
   signUpText: {
     color: 'blue',
     textAlign: 'center',
+  },
+  logoBackground: {
+    width: null,
+    resizeMode: 'contain',
+    height: 40,
+    marginBottom: 30,
   },
 });
 

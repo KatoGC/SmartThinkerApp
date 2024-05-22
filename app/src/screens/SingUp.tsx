@@ -20,7 +20,7 @@ const SingUp = () => {
   const navigation = useNavigation<SingUpScreenNavigationProp>();
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.title}>Registro</Text>
       <TextInput style={styles.input} placeholder="Nombre Completo" />
       <TextInput style={styles.input} placeholder="Correo" />
@@ -35,7 +35,7 @@ const SingUp = () => {
         secureTextEntry
       />
       <Button title="Registrarse" onPress={() => {}} />
-      <TouchableOpacity onPress={() => navigation.navigate('SingUp')}>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
         <Text style={styles.signInText}>¿Ya tienes cuenta? Inicia Sesión</Text>
       </TouchableOpacity>
     </View>

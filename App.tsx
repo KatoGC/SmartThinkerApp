@@ -2,9 +2,9 @@ import React from 'react';
 import {NavigationContainer, NavigationProp, useNavigation} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import Login from './app/src/components/Login';
-import SplashScreen from './app/src/components/SplashScreen';
-import SingUp from './app/src/components/SingUp';
+import Login from './app/src/screens/Login';
+import SplashScreen from './app/src/screens/SplashScreen';
+import SingUp from './app/src/screens/SingUp';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
