@@ -1,8 +1,9 @@
 import {View, StyleSheet, Image} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../../App';
 import {useNavigation} from '@react-navigation/native';
+import * as Animatable from 'react-native-animatable';
 
 type SplashScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -12,17 +13,21 @@ type SplashScreenNavigationProp = StackNavigationProp<
 const SplashScreen = () => {
   const navigation = useNavigation<SplashScreenNavigationProp>();
 
+  const viewRef = useRef(null);
+
   useEffect(() => {
-    setTimeout(() => {
-      navigation.replace('Login');
-    }, 2000);
+    viewRef.current?.fadeIn(1000).then(() => {
+      setTimeout(() => {
+        navigation.replace('Login');
+      }, 1000); // Espera 1 segundo más para que se vea la animación
+    });
   }, [navigation]);
 
   return (
-    <View style={styles.container}>
+    <Animatable.View ref={viewRef} style={styles.container}>
       <Image source={require('../assets/Logo.png')} style={styles.logo} />
       <Image source={require('../assets/Logo-no-background.png')} />
-    </View>
+    </Animatable.View>
   );
 };
 

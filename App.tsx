@@ -10,6 +10,7 @@ import Login from './app/src/screens/Login';
 import SplashScreen from './app/src/screens/SplashScreen';
 import SingUp from './app/src/screens/SingUp';
 import HomeScreen from './app/src/screens/HomeScreen';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -17,7 +18,9 @@ export type RootStackParamList = {
   SingUp: undefined;
   HomeScreen: undefined;
 };
+
 const Stack = createStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator();
 
 function App(): React.JSX.Element {
   return (
@@ -39,12 +42,20 @@ function App(): React.JSX.Element {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="HomeScreen"
-          component={HomeScreen}
+          name="Main"
+          component={MainTabs}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+function MainTabs() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={HomeScreen} />
+    </Tab.Navigator>
+  );
+}
+
 export default App;

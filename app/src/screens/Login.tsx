@@ -37,10 +37,7 @@ const Login = () => {
       <TouchableOpacity onPress={() => {}}>
         <Text style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Text>
       </TouchableOpacity>
-      <Button
-        title="Ingresar"
-        onPress={() => navigation.navigate('HomeScreen')}
-      />
+      <Button title="Ingresar" onPress={() => navigation.navigate('Main')} />
       <Text style={styles.singWith}>O ingresa con:</Text>
       <View style={styles.socialLoginContainer}>
         <View style={styles.iconContainer}>
