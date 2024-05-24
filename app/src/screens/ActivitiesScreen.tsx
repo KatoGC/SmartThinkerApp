@@ -8,7 +8,8 @@ import {
   View,
   Image,
 } from 'react-native';
-import ActivityCard from '../components/ActivityCard'
+import ActivityCard from '../components/ActivityCard';
+import axios from 'axios';
 // ... (Importa tu componente ActivityCard)
 
 const ActivitiesScreen = () => {
@@ -18,7 +19,6 @@ const ActivitiesScreen = () => {
     // Lógica para obtener datos de actividades desde Strapi
     const fetchActivities = async () => {
       try {
-        // ... (Realiza la solicitud a tu API de Strapi)
         const activitiesData = await fetchActivitiesFromStrapi();
         setActivities(activitiesData);
       } catch (error) {

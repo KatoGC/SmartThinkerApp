@@ -13,23 +13,24 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import CourseCard from '../components/CourseCard';
 import ActivityCard from '../components/ActivityCard';
 import {useNavigation} from '@react-navigation/native';
+import api from '../api/strapi';
 
 const HomeScreen = () => {
   const [activities, setActivities] = useState({});
   const [userCourses, setUserCourses] = useState({});
   useEffect(() => {
-    const fetchActivitiesAndCourses = async () => {
+    const fetchData = async () => {
       try {
-        const activitiesData = await fetchActivitiesFromStrapi();
-        const coursesData = await fetchCoursesFromStrapi();
+        const activitiesResponse = await api.get('/api/actividades');
+        const coursesResponse = await api.get('/api/cursos');
 
-        setActivities(activitiesData);
-        setUserCourses(coursesData);
+        setActivities(activitiesResponse.data);
+        setUserCourses(coursesResponse.data);
       } catch (error) {
         console.error('Error fetching data: ', error);
       }
     };
-    fetchActivitiesAndCourses();
+    fetchData();
   }, []);
 
   const navigation = useNavigation(); // Obtén el objeto de navegación

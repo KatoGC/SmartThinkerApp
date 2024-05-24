@@ -1,4 +1,4 @@
-import {View, StyleSheet, Image} from 'react-native';
+import {StyleSheet, Image} from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../../App';
