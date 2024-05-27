@@ -7,17 +7,20 @@ import {
   Image,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '../../../App';
-import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import CustomTextInput from '../components/CustomTextInput';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-type LoginNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
+type RootStackParamList = {
+  HomeScreen: undefined;
+  SingUp: undefined;
+};
 
-const Login = () => {
-  const navigation = useNavigation<LoginNavigationProp>();
+type LoginNavigationProp = {
+  navigation: StackNavigationProp<RootStackParamList, 'HomeScreen'>;
+};
 
+function Login({navigation}: LoginNavigationProp): React.JSX.Element {
   return (
     <View style={styles.container}>
       <Image
@@ -37,7 +40,10 @@ const Login = () => {
       <TouchableOpacity onPress={() => {}}>
         <Text style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Text>
       </TouchableOpacity>
-      <Button title="Ingresar" onPress={() => navigation.navigate('Main')} />
+      <Button
+        title="Ingresar"
+        onPress={() => navigation.navigate('HomeScreen')}
+      />
       <Text style={styles.singWith}>O ingresa con:</Text>
       <View style={styles.socialLoginContainer}>
         <View style={styles.iconContainer}>
@@ -55,7 +61,7 @@ const Login = () => {
       </TouchableOpacity>
     </View>
   );
-};
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,

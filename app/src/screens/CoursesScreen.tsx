@@ -1,187 +1,184 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {
+  SafeAreaView,
+  ScrollView,
   View,
   Text,
-  Image,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
-  FlatList,
-  SafeAreaView,
+  TextInput,
+  Image,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons'; // O el paquete de iconos que prefieras
+import Icon from 'react-native-vector-icons/Ionicons';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../../App';
 
-const CourseScreen = ({route}) => {
-  const {courseId} = route.params; // Obtén el ID del curso desde los parámetros de navegación
-  const [course, setCourse] = useState(null);
-
-  useEffect(() => {
-    // Lógica para obtener los datos del curso desde Strapi usando el courseId
-    const fetchCourseDetails = async () => {
-      try {
-        // Realiza la solicitud a tu API de Strapi
-        // ...
-        const courseData = await fetchCourseFromStrapi(courseId);
-        setCourse(courseData);
-      } catch (error) {
-        console.error('Error fetching course details:', error);
-        // Manejo de errores (mostrar mensaje al usuario, etc.)
-      }
-    };
-
-    fetchCourseDetails();
-  }, [courseId]); // El useEffect se ejecuta cada vez que cambia el courseId
-
-  if (!course) {
-    return <Text>Cargando curso...</Text>; // Mostrar un indicador de carga mientras se obtienen los datos
-  }
+const CoursesScreen = () => {
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        <Image
-          source={{uri: course.imagenDestacada}}
-          style={styles.coverImage}
-        />
-
-        <View style={styles.courseInfo}>
-          <Text style={styles.courseTitle}>{course.titulo}</Text>
-          <View style={styles.instructorInfo}>
-            <Text style={styles.instructorName}>
-              {course.instructor.nombre}
-            </Text>
-            {/* ... (Calificación del instructor) ... */}
-          </View>
-          <View style={styles.courseDetails}>
-            <Icon name="time-outline" size={18} color="gray" />
-            <Text style={styles.courseDetailText}>{course.duracion}</Text>
-            <Icon name="book-outline" size={18} color="gray" />
-            <Text style={styles.courseDetailText}>
-              {course.lecciones.length} módulos
-            </Text>
-          </View>
-          <Text style={styles.courseDescription}>{course.descripcion}</Text>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={30} color="gray" />
+        </TouchableOpacity>
+        <View style={styles.headerRight}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Notifications')}>
+            <Icon name="notifications-outline" size={30} color="gray" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('UserScreen')}>
+            <Icon name="person-outline" size={30} color="gray" />
+          </TouchableOpacity>
         </View>
+      </View>
 
-        {/* Lecciones */}
-        <View style={styles.lessonsContainer}>
-          <Text style={styles.sectionTitle}>Lecciones</Text>
-          <FlatList
-            data={course.lecciones}
-            renderItem={({item}) => (
-              <View style={styles.lessonItem}>
-                <Image
-                  source={{uri: item.miniatura}}
-                  style={styles.lessonImage}
-                />
-                <View style={styles.lessonInfo}>
-                  <Text style={styles.lessonTitle}>{item.titulo}</Text>
-                  <Text style={styles.lessonDuration}>{item.duracion} min</Text>
-                </View>
-                <TouchableOpacity style={styles.playButton}>
-                  <Icon name="play-circle-outline" size={24} color="white" />
-                </TouchableOpacity>
-              </View>
-            )}
-            keyExtractor={item => item.id.toString()}
+      <ScrollView>
+        <View style={styles.searchContainer}>
+          <TextInput style={styles.searchInput} placeholder="Buscar cursos" />
+          <Icon
+            style={styles.icon}
+            name="search-outline"
+            size={20}
+            color="gray"
           />
         </View>
 
-        {/* Botón "Enroll Now" */}
-        <TouchableOpacity style={styles.enrollButton}>
-          <Text style={styles.enrollButtonText}>Enroll Now</Text>
-        </TouchableOpacity>
+        <View style={styles.filterContainer}>
+          <TouchableOpacity style={styles.filterButton}>
+            <Text>All</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.filterButton}>
+            <Text>Progress</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.filterButton}>
+            <Text>Finished</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.filterButton}>
+            <Text>New</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.filterButton}>
+            <Text>Trending</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.courseCard}>
+          <Image
+            source={{uri: 'https://example.com/course-image.jpg'}}
+            style={styles.courseImage}
+          />
+          <Text style={styles.courseTitle}>
+            Introduction to Web Development
+          </Text>
+          <Text style={styles.courseInstructor}>Instructor | Davit Rouben</Text>
+          <View style={styles.courseRating}>
+            <Text>20/40</Text>
+            <Icon name="star" size={20} color="orange" />
+            <Text>4.5</Text>
+          </View>
+          <View style={styles.progressBar}>
+            <View style={[styles.progress, {width: '50%'}]} />
+          </View>
+          <TouchableOpacity style={styles.continueButton}>
+            <Text style={styles.continueButtonText}>Continue Learning</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
-  coverImage: {
-    width: '100%',
-    height: 200, // Ajusta la altura según tus necesidades
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 15,
   },
-  courseInfo: {
-    padding: 20,
+  headerRight: {
+    flexDirection: 'row',
   },
-  courseTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  instructorInfo: {
+  searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    padding: 10,
+    borderWidth: 1.5,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    margin: 10,
   },
-  instructorName: {
-    fontSize: 16,
-    marginRight: 10,
+  icon: {
+    paddingRight: 5,
   },
-  courseDetails: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  courseDetailText: {
-    fontSize: 14,
-    color: 'gray',
-    marginLeft: 5,
+  searchInput: {
+    flex: 1,
     marginRight: 15,
   },
-  courseDescription: {
-    fontSize: 16,
-    lineHeight: 24, // Espacio entre líneas
-  },
-  lessonsContainer: {
-    padding: 20,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  lessonItem: {
+  filterContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
+    justifyContent: 'space-around',
+    paddingVertical: 10,
   },
-  lessonImage: {
-    width: 50,
-    height: 50,
+  filterButton: {
+    padding: 10,
+    backgroundColor: '#f0f0f0',
     borderRadius: 5,
-    marginRight: 10,
   },
-  lessonInfo: {
-    flex: 1, // Ocupa el espacio restante
+  courseCard: {
+    backgroundColor: '#fff',
+    margin: 10,
+    padding: 10,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: {width: 0, height: 2},
+    shadowRadius: 5,
+    elevation: 5,
   },
-  lessonTitle: {
-    fontSize: 16,
-    marginBottom: 5,
+  courseImage: {
+    width: '100%',
+    height: 150,
+    borderRadius: 10,
   },
-  lessonDuration: {
+  courseTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginVertical: 5,
+  },
+  courseInstructor: {
     fontSize: 14,
     color: 'gray',
   },
-  playButton: {
-    padding: 10,
-    borderRadius: 20,
-    backgroundColor: 'blue',
+  courseRating: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 5,
   },
-  enrollButton: {
-    backgroundColor: 'orange',
-    padding: 15,
+  progressBar: {
+    height: 5,
+    backgroundColor: '#e0e0e0',
+    borderRadius: 5,
+    overflow: 'hidden',
+  },
+  progress: {
+    height: '100%',
+    backgroundColor: '#76c7c0',
+  },
+  continueButton: {
+    backgroundColor: '#76c7c0',
+    padding: 10,
     borderRadius: 5,
     alignItems: 'center',
-    marginHorizontal: 20,
-    marginBottom: 20,
+    marginTop: 10,
   },
-  enrollButtonText: {
-    color: 'white',
-    fontSize: 18,
+  continueButtonText: {
+    color: '#fff',
     fontWeight: 'bold',
   },
 });
+
+export default CoursesScreen;

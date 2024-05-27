@@ -3,73 +3,49 @@ import {
   ScrollView,
   View,
   Text,
-  FlatList,
   StyleSheet,
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
-import CourseCard from '../components/CourseCard';
-import ActivityCard from '../components/ActivityCard';
 import {useNavigation} from '@react-navigation/native';
-import api from '../api/strapi';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../../../App';
 
 const HomeScreen = () => {
-  const [activities, setActivities] = useState({});
-  const [userCourses, setUserCourses] = useState({});
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const activitiesResponse = await api.get('/api/actividades');
-        const coursesResponse = await api.get('/api/cursos');
-
-        setActivities(activitiesResponse.data);
-        setUserCourses(coursesResponse.data);
-      } catch (error) {
-        console.error('Error fetching data: ', error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  const navigation = useNavigation(); // Obtén el objeto de navegación
-
-  const handleLogout = () => {
-    navigation.navigate('Login'); // Navega a la pantalla de Login
-  };
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>(); // Obtén el objeto de navegación
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <Text style={styles.logoutButtonText}>Cerrar Sesión (Temporal)</Text>
         </TouchableOpacity>
         {/* Barra de Búsqueda */}
         <View style={styles.searchContainer}>
-          <TextInput style={styles.searchInput} placeholder="Search..." />
-          <Icon name="search-outline" size={24} color="gray" />
+          <TextInput style={styles.searchInput} placeholder="Buscar cursos" />
+          <Icon
+            style={styles.icon}
+            name="search-outline"
+            size={20}
+            color="gray"
+          />
         </View>
 
         {/* Actividades */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Actividades</Text>
-          <FlatList
-            data={activities}
-            renderItem={({item}) => <ActivityCard activity={item} />}
-            keyExtractor={item => item.id.toString()}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-          />
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ActivitiesScreen')}>
+            <Text style={styles.sectionTitle}>Actividades</Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Mis Cursos */}
+        {/* Cursos */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Mis Cursos</Text>
-          <FlatList
-            data={userCourses}
-            renderItem={({item}) => <CourseCard course={item} />}
-            keyExtractor={item => item.id.toString()}
-          />
+          <TouchableOpacity
+            onPress={() => navigation.navigate('CoursesScreen')}>
+            <Text style={styles.sectionTitle}>Cursos</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -84,15 +60,18 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
-    borderWidth: 1,
+    padding: 1,
+    borderWidth: 1.5,
     borderColor: '#ccc',
-    borderRadius: 5,
-    margin: 10,
+    borderRadius: 10,
+    margin: 5,
+  },
+  icon: {
+    paddingRight: 5,
   },
   searchInput: {
     flex: 1,
-    marginRight: 10,
+    marginRight: 15,
   },
   section: {
     marginBottom: 20,
@@ -102,6 +81,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 10,
     marginBottom: 10,
+  },
+  logoutButtonText: {
+    fontSize: 16,
   },
 });
 

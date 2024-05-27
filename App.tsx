@@ -1,26 +1,25 @@
 import React from 'react';
-import {
-  NavigationContainer,
-  NavigationProp,
-  useNavigation,
-} from '@react-navigation/native';
+import {NavigationContainer, NavigationProp} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import Login from './app/src/screens/Login';
 import SplashScreen from './app/src/screens/SplashScreen';
 import SingUp from './app/src/screens/SingUp';
 import HomeScreen from './app/src/screens/HomeScreen';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import ActivitiesScreen from './app/src/screens/ActivitiesScreen';
+import CoursesScreen from './app/src/screens/CoursesScreen';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
   Login: undefined;
   SingUp: undefined;
   HomeScreen: undefined;
+  ActivitiesScreen: undefined;
+  CoursesScreen: undefined;
 };
+export type StackNavigation = NavigationProp<RootStackParamList>;
 
 const Stack = createStackNavigator<RootStackParamList>();
-const Tab = createBottomTabNavigator();
 
 function App(): React.JSX.Element {
   return (
@@ -42,19 +41,22 @@ function App(): React.JSX.Element {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="Main"
-          component={MainTabs}
+          name="HomeScreen"
+          component={HomeScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ActivitiesScreen"
+          component={ActivitiesScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="CoursesScreen"
+          component={CoursesScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
     </NavigationContainer>
-  );
-}
-function MainTabs() {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} />
-    </Tab.Navigator>
   );
 }
 
