@@ -8,6 +8,7 @@ import SingUp from './app/src/screens/SingUp';
 import HomeScreen from './app/src/screens/HomeScreen';
 import ActivitiesScreen from './app/src/screens/ActivitiesScreen';
 import CoursesScreen from './app/src/screens/CoursesScreen';
+import UserScreen from './app/src/screens/UserScreen';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -16,6 +17,7 @@ export type RootStackParamList = {
   HomeScreen: undefined;
   ActivitiesScreen: undefined;
   CoursesScreen: undefined;
+  UserScreen: undefined;
 };
 export type StackNavigation = NavigationProp<RootStackParamList>;
 
@@ -53,6 +55,11 @@ function App(): React.JSX.Element {
         <Stack.Screen
           name="CoursesScreen"
           component={CoursesScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="UserScreen"
+          component={UserScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
