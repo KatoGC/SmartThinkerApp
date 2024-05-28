@@ -9,6 +9,8 @@ import HomeScreen from './app/src/screens/HomeScreen';
 import ActivitiesScreen from './app/src/screens/ActivitiesScreen';
 import CoursesScreen from './app/src/screens/CoursesScreen';
 import UserScreen from './app/src/screens/UserScreen';
+import EditProfileScreen from './app/src/screens/EditProfileScreen';
+import Notifications from './app/src/screens/Notifications';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -18,6 +20,8 @@ export type RootStackParamList = {
   ActivitiesScreen: undefined;
   CoursesScreen: undefined;
   UserScreen: undefined;
+  EditProfileScreen: undefined;
+  Notifications: undefined;
 };
 export type StackNavigation = NavigationProp<RootStackParamList>;
 
@@ -60,6 +64,16 @@ function App(): React.JSX.Element {
         <Stack.Screen
           name="UserScreen"
           component={UserScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EditProfileScreen"
+          component={EditProfileScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Notifications"
+          component={Notifications}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

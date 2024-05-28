@@ -28,7 +28,7 @@ const SingUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [ocupation, setOcupation] = useState('');
+  const [occupation, setOccupation] = useState('');
   const [age, setAge] = useState('');
   const [role, setRole] = useState('Estudiante');
   const [description, setDescription] = useState('');
@@ -90,8 +90,8 @@ const SingUp = () => {
         <CustomTextInput
           iconName="briefcase"
           placeholder="Ocupación"
-          value={ocupation}
-          onChangeText={setOcupation}
+          value={occupation}
+          onChangeText={setOccupation}
         />
         <CustomTextInput
           iconName="calendar"
@@ -125,7 +125,10 @@ const SingUp = () => {
               : 'Subir imagen de perfil'}
           </Text>
         </TouchableOpacity>
-        <Button title="Registrarse" onPress={() => {}} />
+        <Button
+          title="Registrarse"
+          onPress={() => navigation.navigate('Login')}
+        />
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <Text style={styles.signInText}>
             ¿Ya tienes cuenta?{' '}

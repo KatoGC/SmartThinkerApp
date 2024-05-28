@@ -16,7 +16,7 @@ const SplashScreen = () => {
   const viewRef = useRef(null);
 
   useEffect(() => {
-    viewRef.current?.fadeIn(1000).then(() => {
+    viewRef.current?.fadeIn(2000).then(() => {
       setTimeout(() => {
         navigation.replace('Login');
       }, 1000); // Espera 1 segundo más para que se vea la animación

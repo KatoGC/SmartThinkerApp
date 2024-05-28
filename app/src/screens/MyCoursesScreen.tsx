@@ -14,7 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../../App';
 
-const ActivitiesScreen = () => {
+const MyCoursesScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   return (
@@ -36,34 +36,13 @@ const ActivitiesScreen = () => {
 
       <ScrollView>
         <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Buscar actividades"
-          />
+          <TextInput style={styles.searchInput} placeholder="Buscar cursos" />
           <Icon
             style={styles.icon}
             name="search-outline"
             size={20}
             color="gray"
           />
-        </View>
-
-        <View style={styles.filterContainer}>
-          <TouchableOpacity style={styles.filterButton}>
-            <Text>All</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton}>
-            <Text>Progress</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton}>
-            <Text>Finished</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton}>
-            <Text>New</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton}>
-            <Text>Trending</Text>
-          </TouchableOpacity>
         </View>
 
         <View style={styles.courseCard}>
@@ -121,16 +100,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 15,
   },
-  filterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
-  },
-  filterButton: {
-    padding: 10,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 5,
-  },
   courseCard: {
     backgroundColor: '#fff',
     margin: 10,
@@ -184,4 +153,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ActivitiesScreen;
+export default MyCoursesScreen;
