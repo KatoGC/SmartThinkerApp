@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Alert,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../../App';
@@ -14,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import CustomTextInput from '../components/CustomTextInput';
 import ImagePicker from 'react-native-image-crop-picker';
 import {Picker} from '@react-native-picker/picker';
+import axios from 'axios';
 
 type SingUpScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -32,16 +34,59 @@ const SingUp = () => {
   const [age, setAge] = useState('');
   const [role, setRole] = useState('Estudiante');
   const [description, setDescription] = useState('');
-  const [profileImage, setProfileImage] = useState(null);
 
-  const handleImageUploda = () => {
-    ImagePicker.openPicker({
-      width: 300,
-      height: 300,
-      cropping: true,
-    }).then(image => {
-      setProfileImage(image.path);
-    });
+  const handleRegister = async () => {
+    if (
+      !name ||
+      !lastName ||
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !occupation ||
+      !age ||
+      !role ||
+      !description
+    ) {
+      return;
+    }
+
+    const body = {
+      data: {
+        name: name,
+        lastName: lastName,
+        email: email,
+        password: password,
+        occupation: occupation,
+        age: age,
+        role: role,
+        description: description,
+      },
+    };
+    try {
+      const response = await axios.post(
+        'http://10.180.2.26:1337/api/usuarios',
+        body, // Aquí enviamos el objeto body directamente
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      console.log(response.data);
+
+      // // Mostrar mensaje de exito
+      // Alert.alert('Registro exitoso', 'Tu cuenta ha sido creada exitosamente', [
+      //   {
+      //     text: 'OK',
+      //     onPress: () => navigation.navigate('Login'),
+      //   },
+      // ]);
+    } catch (error) {
+      console.error(
+        'Error',
+        error.response ? error.response.data : error.message,
+      );
+    }
   };
 
   return (
@@ -116,19 +161,7 @@ const SingUp = () => {
           value={description}
           onChangeText={setDescription}
         />
-        <TouchableOpacity
-          style={styles.imagePickerButton}
-          onPress={handleImageUploda}>
-          <Text style={styles.imagePickerText}>
-            {profileImage
-              ? 'Cambiar imagen de perfil'
-              : 'Subir imagen de perfil'}
-          </Text>
-        </TouchableOpacity>
-        <Button
-          title="Registrarse"
-          onPress={() => navigation.navigate('Login')}
-        />
+        <Button title="Registrarse" onPress={handleRegister} />
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <Text style={styles.signInText}>
             ¿Ya tienes cuenta?{' '}
