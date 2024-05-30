@@ -12,8 +12,8 @@ import {
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../../App';
 import {useNavigation} from '@react-navigation/native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import CustomTextInput from '../components/CustomTextInput';
-import ImagePicker from 'react-native-image-crop-picker';
 import {Picker} from '@react-native-picker/picker';
 import axios from 'axios';
 
@@ -34,8 +34,30 @@ const SingUp = () => {
   const [age, setAge] = useState('');
   const [role, setRole] = useState('Estudiante');
   const [description, setDescription] = useState('');
+  const [loading, setLoading] = useState(false);
 
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const checkEmailExists = async (email) => {
+    try {
+      const response = await axios.get(
+        `http://10.0.2.2:1337/api/usuarios?filters[email][$eq]=${email}`,
+      );
+      console.log('Email check response:', response.data);
+      return response.data.length > 0;
+    } catch (error) {
+      console.error(
+        'Error checking email:',
+        error.response ? error.response.data : error.message,
+      );
+      return false;
+    }
+  };
   const handleRegister = async () => {
+    console.log('Starting registration...');
     if (
       !name ||
       !lastName ||
@@ -47,24 +69,42 @@ const SingUp = () => {
       !role ||
       !description
     ) {
+      Alert.alert('Error', 'Por favor, comeplete todos los campos.');
+      return;
+    }
+    if (!validateEmail(email)) {
+      Alert.alert('Error', 'Por favor, ingrese un correo electrónico válido.');
       return;
     }
 
-    const body = {
-      data: {
-        name: name,
-        lastName: lastName,
-        email: email,
-        password: password,
-        occupation: occupation,
-        age: age,
-        role: role,
-        description: description,
-      },
-    };
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Las contraseñas no coinciden.');
+      return;
+    }
+    setLoading(true); // Mostrar spinner
     try {
+      const emailExist = await checkEmailExists(email);
+      if (emailExist) {
+        setLoading(false); // Ocultar spinner
+        Alert.alert('Error', 'El correo electronico ya esta registrado.');
+        return;
+      }
+
+      const body = {
+        data: {
+          name: name,
+          lastName: lastName,
+          email: email,
+          password: password,
+          occupation: occupation,
+          age: age,
+          role: role,
+          description: description,
+        },
+      };
+      console.log(body);
       const response = await axios.post(
-        'http://10.180.2.26:1337/api/usuarios',
+        'http://10.0.2.2:1337/api/usuarios',
         body, // Aquí enviamos el objeto body directamente
         {
           headers: {
@@ -72,19 +112,24 @@ const SingUp = () => {
           },
         },
       );
-      console.log(response.data);
-
-      // // Mostrar mensaje de exito
-      // Alert.alert('Registro exitoso', 'Tu cuenta ha sido creada exitosamente', [
-      //   {
-      //     text: 'OK',
-      //     onPress: () => navigation.navigate('Login'),
-      //   },
-      // ]);
+      console.log('Registration response', response.data);
+      setLoading(false); // Ocultar spinner
+      // Mostrar mensaje de éxito
+      Alert.alert('Registro exitoso', 'Tu cuenta ha sido creada exitosamente', [
+        {
+          text: 'OK',
+          onPress: () => navigation.navigate('Login'), // Navegar a la pantalla de Login
+        },
+      ]);
     } catch (error) {
       console.error(
-        'Error',
+        'Error registering',
         error.response ? error.response.data : error.message,
+      );
+      setLoading(false); // Ocultar spinner
+      Alert.alert(
+        'Error',
+        'Hubo un problema con el registro. Intentalo de nuevo',
       );
     }
   };
@@ -92,8 +137,13 @@ const SingUp = () => {
   return (
     <ScrollView contentContainerStyle={styles.contentContainer}>
       <View style={styles.container}>
+        <Spinner
+          visible={loading}
+          textContent={'Registrando...'}
+          textStyle={styles.spinnerTextStyle}
+        />
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.goback}>Atras</Text>
+          <Text style={styles.goback}>Atrás</Text>
         </TouchableOpacity>
         <Image
           source={require('../assets/Logo-no-background.png')}
@@ -172,6 +222,7 @@ const SingUp = () => {
     </ScrollView>
   );
 };
+
 const styles = StyleSheet.create({
   goback: {
     fontSize: 16,
@@ -224,6 +275,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '5%',
     marginBottom: 20,
+  },
+  spinnerTextStyle: {
+    color: '#FFF',
   },
 });
 export default SingUp;
