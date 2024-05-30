@@ -19,10 +19,10 @@ import axios from 'axios';
 
 type SingUpScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'SingUp'
+  'SignUp'
 >;
 
-const SingUp = () => {
+const SignUp = () => {
   const navigation = useNavigation<SingUpScreenNavigationProp>();
   // Estados para los atributos del usuario
   const [name, setName] = useState('');
@@ -48,7 +48,7 @@ const SingUp = () => {
       );
       console.log('Email check response:', response.data);
       return response.data.length > 0;
-    } catch (error) {
+    } catch (error: any) {
       console.error(
         'Error checking email:',
         error.response ? error.response.data : error.message,
@@ -280,4 +280,4 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
 });
-export default SingUp;
+export default SignUp;

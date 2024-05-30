@@ -4,7 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import Login from './app/src/screens/Login';
 import SplashScreen from './app/src/screens/SplashScreen';
-import SingUp from './app/src/screens/SingUp';
+import SignUp from './app/src/screens/SignUp';
 import HomeScreen from './app/src/screens/HomeScreen';
 import ActivitiesScreen from './app/src/screens/ActivitiesScreen';
 import CoursesScreen from './app/src/screens/CoursesScreen';
@@ -15,7 +15,7 @@ import Notifications from './app/src/screens/Notifications';
 export type RootStackParamList = {
   SplashScreen: undefined;
   Login: undefined;
-  SingUp: undefined;
+  SignUp: undefined;
   HomeScreen: undefined;
   ActivitiesScreen: undefined;
   CoursesScreen: undefined;
@@ -42,8 +42,8 @@ function App(): React.JSX.Element {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="SingUp"
-          component={SingUp}
+          name="SignUp"
+          component={SignUp}
           options={{headerShown: false}}
         />
         <Stack.Screen
