@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 type RootStackParamList = {
   HomeScreen: undefined;
-  SingUp: undefined;
+  SignUp: undefined;
 };
 
 type LoginNavigationProp = {
@@ -47,13 +47,21 @@ function Login({navigation}: LoginNavigationProp): React.JSX.Element {
       <Text style={styles.singWith}>O ingresa con:</Text>
       <View style={styles.socialLoginContainer}>
         <View style={styles.iconContainer}>
-          <Icon name="google" size={40} color="#EA4335" />
-          <Icon name="facebook-square" size={40} color="#3b5998" />
-          <Icon name="twitter-square" size={40} color="#1DA1F2" />
-          <Icon name="linkedin-square" size={40} color="#0077B5" />
+          <TouchableOpacity style={styles.iconLogos}>
+            <Icon name="google" size={40} color="#EA4335" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconLogos}>
+            <Icon name="facebook-square" size={40} color="#3b5998" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconLogos}>
+            <Icon name="twitter-square" size={40} color="#1DA1F2" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconLogos}>
+            <Icon name="linkedin-square" size={40} color="#0077B5" />
+          </TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity onPress={() => navigation.navigate('SingUp')}>
+      <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
         <Text style={styles.signUpText}>
           ¿No tienes cuenta?{' '}
           <Text style={styles.signUpTextBold}>Regístrate</Text>
@@ -108,6 +116,13 @@ const styles = StyleSheet.create({
   },
   signUpTextBold: {
     fontWeight: 'bold',
+  },
+  iconLogos: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 2.5,
+    borderRadius: 10,
   },
 });
 
