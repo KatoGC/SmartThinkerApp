@@ -14,7 +14,6 @@ import {RootStackParamList} from '../../../App';
 import {useNavigation} from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import CustomTextInput from '../components/CustomTextInput';
-import {Picker} from '@react-native-picker/picker';
 import axios from 'axios';
 
 type SingUpScreenNavigationProp = StackNavigationProp<
@@ -25,14 +24,13 @@ type SingUpScreenNavigationProp = StackNavigationProp<
 const SignUp = () => {
   const navigation = useNavigation<SingUpScreenNavigationProp>();
   // Estados para los atributos del usuario
-  const [name, setName] = useState('');
+  const [username, setUserName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [occupation, setOccupation] = useState('');
   const [age, setAge] = useState('');
-  const [role, setRole] = useState('Estudiante');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -44,7 +42,7 @@ const SignUp = () => {
   const checkEmailExists = async (email) => {
     try {
       const response = await axios.get(
-        `http://10.0.2.2:1337/api/usuarios?filters[email][$eq]=${email}`,
+        `http://10.0.2.2:1337/api/users?filters[email][$eq]=${email}`,
       );
       console.log('Email check response:', response.data);
       return response.data.length > 0;
@@ -59,14 +57,13 @@ const SignUp = () => {
   const handleRegister = async () => {
     console.log('Starting registration...');
     if (
-      !name ||
+      !username ||
       !lastName ||
       !email ||
       !password ||
       !confirmPassword ||
       !occupation ||
       !age ||
-      !role ||
       !description
     ) {
       Alert.alert('Error', 'Por favor, comeplete todos los campos.');
@@ -89,23 +86,17 @@ const SignUp = () => {
         Alert.alert('Error', 'El correo electronico ya esta registrado.');
         return;
       }
-
-      const body = {
-        data: {
-          name: name,
-          lastName: lastName,
-          email: email,
-          password: password,
-          occupation: occupation,
-          age: age,
-          role: role,
-          description: description,
-        },
-      };
-      console.log(body);
       const response = await axios.post(
-        'http://10.0.2.2:1337/api/usuarios',
-        body, // Aquí enviamos el objeto body directamente
+        'http://10.0.2.2:1337/api/auth/local/register',
+        {
+          username,
+          lastName,
+          email,
+          password,
+          occupation,
+          age,
+          description,
+        }, // Aquí enviamos el objeto body directamente
         {
           headers: {
             'Content-Type': 'application/json',
@@ -124,7 +115,7 @@ const SignUp = () => {
     } catch (error) {
       console.error(
         'Error registering',
-        error.response ? error.response.data : error.message,
+        error.response.data.error.details.errors,
       );
       setLoading(false); // Ocultar spinner
       Alert.alert(
@@ -153,8 +144,8 @@ const SignUp = () => {
         <CustomTextInput
           iconName="user"
           placeholder="Nombre"
-          value={name}
-          onChangeText={setName}
+          value={username}
+          onChangeText={setUserName}
         />
         <CustomTextInput
           iconName="user"
@@ -195,14 +186,6 @@ const SignUp = () => {
           onChangeText={text => setAge(text.replace(/[^0-9]/g, ''))} // Solo permitir números
           keyboardType="numeric"
         />
-        <Picker
-          style={styles.picker}
-          selectedValue={role}
-          onValueChange={itemValue => setRole(itemValue)}>
-          <Picker.Item label="Estudiante" value="Estudiante" />
-          <Picker.Item label="Profesor" value="Profesor" />
-          <Picker.Item label="Administrador" value="Administrador" />
-        </Picker>
         <CustomTextInput
           iconName="address-book"
           multiline
