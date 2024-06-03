@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -8,14 +8,49 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../../App';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UserScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const jwt = await AsyncStorage.getItem('jwt');
+
+        if (!jwt) {
+          navigation.navigate('Login');
+          return;
+        }
+
+        const response = await axios.get('http://10.0.2.2:1337/api/users/me', {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        });
+        setUserData(response.data);
+        console.log('User data fetched:', response.data);
+      } catch (error) {
+        console.error(
+          'Error fetching user data:',
+          error.response ? error.response.data : error.message,
+        );
+        Alert.alert(
+          'Error',
+          'Ocurrió un error al cargar los datos del usuario',
+        );
+      }
+    };
+    fetchUserData();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -37,36 +72,44 @@ const UserScreen = () => {
         </View>
 
         {/* User Information */}
-        <View style={styles.infoContainer}>
-          <Text style={styles.infoLabel}>Nombre</Text>
-          <TextInput
-            style={styles.infoInput}
-            placeholder="Diana Giffard" // Reemplaza con el nombre del usuario
-            editable={false}
-          />
+        {userData && (
+          <View style={styles.infoContainer}>
+            <Text style={styles.infoLabel}>Nombre</Text>
+            <TextInput
+              style={styles.infoInput}
+              value={userData.username}
+              editable={false}
+            />
 
-          <Text style={styles.infoLabel}>Email</Text>
-          <TextInput
-            style={styles.infoInput}
-            placeholder="diana.giffard@example.com" // Reemplaza con el email del usuario
-            editable={false}
-          />
+            <Text style={styles.infoLabel}>Email</Text>
+            <TextInput
+              style={styles.infoInput}
+              value={userData.email}
+              editable={false}
+            />
 
-          <Text style={styles.infoLabel}>Ocupacion</Text>
-          <TextInput
-            style={styles.infoInput}
-            placeholder="Software Developer" // Reemplaza con la ocupación del usuario
-            editable={false}
-          />
+            <Text style={styles.infoLabel}>Ocupacion</Text>
+            <TextInput
+              style={styles.infoInput}
+              value={userData.occupation}
+              editable={false}
+            />
 
-          <Text style={styles.infoLabel}>Rol</Text>
-          <TextInput
-            style={styles.infoInput}
-            placeholder="Estudiante" // Reemplaza con el rol del usuario
-            editable={false}
-          />
-        </View>
+            <Text style={styles.infoLabel}>Descripcion</Text>
+            <TextInput
+              style={styles.infoInput}
+              value={userData.description}
+              editable={false}
+            />
 
+            <Text style={styles.infoLabel}>Edad</Text>
+            <TextInput
+              style={styles.infoInput}
+              value={userData.age.toString()}
+              editable={false}
+            />
+          </View>
+        )}
         {/* Edit Profile Button */}
         <TouchableOpacity
           style={styles.editButton}

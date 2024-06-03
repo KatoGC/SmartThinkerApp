@@ -6,32 +6,87 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../../App';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditProfileScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const [userData, setUserData] = useState(null);
 
-  // Estado para los campos de usuario
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [occupation, setOccupation] = useState('');
-  const [role, setRole] = useState('Estudiante');
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const jwt = await AsyncStorage.getItem('jwt');
+        if (!jwt) {
+          navigation.navigate('Login');
+          return;
+        }
+        const response = await axios.get('http://10.0.2.2:1337/api/users/me', {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        });
+        setUserData(response.data);
+      } catch (error) {
+        console.error(
+          'Error fetching user data:',
+          error.response ? error.response.data : error.message,
+        );
+        Alert.alert(
+          'Error',
+          'Ocurrió un error al cargar los datos del usuario',
+        );
+      }
+    };
 
-  const handleSave = () => {
-    // Logica para guardar cambios
-    // Strapi
-    console.log('Guardando cambios...', {name, email, occupation, role});
-    navigation.goBack();
+    fetchUserData();
+  }, []); // <-- Ejecuta el efecto solo una vez al montar el componente
+
+  const handleSave = async () => {
+    try {
+      const jwt = await AsyncStorage.getItem('jwt');
+      if (!jwt) {
+        navigation.navigate('Login');
+        return;
+      }
+
+      const response = await axios.put(
+        `http://10.0.2.2:1337/api/users/${userData.id}`,
+        {
+          username: userData.username,
+          email: userData.email,
+          occupation: userData.occupation,
+          description: userData.description,
+          age: userData.age,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        },
+      );
+
+      console.log('Perfil actualizado:', response.data);
+      Alert.alert('Éxito', 'Perfil actualizado correctamente');
+      navigation.goBack(); // Regresar a la pantalla anterior
+    } catch (error) {
+      console.error(
+        'Error al actualizar el perfil:',
+        error.response ? error.response.data : error.message,
+      );
+      Alert.alert('Error', 'Ocurrió un error al actualizar el perfil');
+    }
   };
-
   const handleCancel = () => {
     // Logica para cancelar cambios
-    navigation.goBack();
+    navigation.goBack(); // Regresar a la pantalla anterior
   };
 
   return (
@@ -50,30 +105,43 @@ const EditProfileScreen = () => {
           <Text style={styles.infoLabel}>Nombre</Text>
           <TextInput
             style={styles.infoInput}
-            value={name}
-            onChangeText={setName}
+            value={userData ? userData.username : ''}
+            onChangeText={text => setUserData({...userData, username: text})}
           />
 
           <Text style={styles.infoLabel}>Email</Text>
           <TextInput
             style={styles.infoInput}
-            value={email}
-            onChangeText={setEmail}
+            value={userData ? userData.email : ''}
+            onChangeText={text => setUserData({...userData, email: text})}
             keyboardType="email-address"
           />
 
           <Text style={styles.infoLabel}>Ocupacion</Text>
           <TextInput
             style={styles.infoInput}
-            value={occupation}
-            onChangeText={setOccupation}
+            value={userData ? userData.occupation : ''}
+            onChangeText={text => setUserData({...userData, occupation: text})}
           />
 
-          <Text style={styles.infoLabel}>Rol</Text>
+          <Text style={styles.infoLabel}>Descripcion</Text>
           <TextInput
             style={styles.infoInput}
-            value={role}
-            onChangeText={setRole}
+            value={userData ? userData.description : ''}
+            onChangeText={text => setUserData({...userData, description: text})}
+          />
+
+          <Text style={styles.infoLabel}>Edad</Text>
+          <TextInput
+            style={styles.infoInput}
+            value={userData ? userData.age.toString() : ''}
+            onChangeText={text =>
+              setUserData(prevData => ({
+                ...prevData,
+                age: text === '' ? 0 : parseInt(text, 10),
+              }))
+            }
+            keyboardType="numeric" // Convertir a número
           />
         </View>
 
